@@ -36,11 +36,6 @@ jobs:
       run: zip -r project.zip ./src 
       env:
         build-name: project.zip
-        
-        
-    # copy build output to a 'staging' directory and define a variable with the project name
-    # - run: mkdir staging && cp target/*.war staging
-       
     
     #  Submit  project to pipeline scan     
     - run: java -jar pipeline-scan.jar --veracode_api_id "${{secrets.VERACODE_API_ID}}" --veracode_api_key "${{secrets.VERACODE_API_KEY}}" --fail_on_severity="Very High, High" --file "project.zip"
@@ -51,7 +46,7 @@ jobs:
         path: results.json
     # Convert pipeline scan output to SARIF format 
       id: convert
-    - uses: Lerer/veracode-pipeline-scan-results-to-sarif@v1.0.6
+    - uses: veracode/veracode-pipeline-scan-results-to-sarif@master
       with:
         pipeline-results-json: results.json
     - uses: github/codeql-action/upload-sarif@v1
